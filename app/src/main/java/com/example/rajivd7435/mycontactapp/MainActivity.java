@@ -1,5 +1,7 @@
 package com.example.rajivd7435.mycontactapp;
 
+import android.app.AlertDialog;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +40,48 @@ public class MainActivity extends AppCompatActivity {
 } else {
             Toast.makeText(MainActivity.this, "FAILED - contact not inserted", Toast.LENGTH_LONG).show();
 }
+
+    }
+
+    public void viewData(View view){
+        Cursor res = myDb.getAllData();
+        Log.d("MyContactApp", "MainActivity: viewDate: received cursor " + res.getCount() );
+        if(res.getCount() == 0){
+            showMessage("Error", "No data found in the database");
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        while (res.moveToNext()){
+            //Append res column 0,1,2,3 (ID plus three fields) to the buffer, delimited by *\n*. 4 lines, appending each of those columns
+            buffer.append("ID: ");
+            buffer.append(res.getString(0));
+            buffer.append("\n");
+            buffer.append("Name: ");
+            buffer.append(res.getString(1));
+            buffer.append("\n");
+            buffer.append("Phone Number: ");
+            buffer.append(res.getString(2));
+            buffer.append("\n");
+            buffer.append("Address: ");
+            buffer.append(res.getString(3));
+            buffer.append("\n");
+            buffer.append("\n");
+
+
+        }
+        Log.d("MyContactApp", "MainActivity: viewDate: assembled stringbuffer");
+        showMessage("Data", buffer.toString());
+
+    }
+
+    public void showMessage(String title, String message) {
+        Log.d("MyContactApp", "MainActivity: showMessage: building alert dialog");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
 
     }
 }
