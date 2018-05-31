@@ -1,6 +1,7 @@
 package com.example.rajivd7435.mycontactapp;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -82,6 +83,36 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+
+    }
+
+    public static final String EXTRA_MESSAGE = "com.example.rajivd7435.mycontactapp.MESSAGE";
+    public void SearchRecord(View view){
+
+        Cursor cursor = myDb.getAllData();
+        StringBuffer message = new StringBuffer();
+
+        while(cursor.moveToNext()){
+            if(cursor.getString(1).matches(editName.getText().toString())){
+                message.append("Name: ");
+                message.append(cursor.getString(1));
+                message.append("\n");
+                message.append("Phone: ");
+                message.append(cursor.getString(2));
+                message.append("\n");
+                message.append("Address: ");
+                message.append(cursor.getString(3));
+                message.append("\n");
+                message.append("\n");
+            }
+        }
+
+
+
+        Log.d("MyContactApp", "MainActivity: launching SearchActivity");
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, message.toString());
+        startActivity(intent);
 
     }
 }
